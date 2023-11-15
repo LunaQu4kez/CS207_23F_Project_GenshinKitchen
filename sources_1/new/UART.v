@@ -13,6 +13,7 @@ module UARTTransmitter(
   reg  [3:0] state = 0;
   reg  [7:0] data = 0;
   wire       _io_ready_T = state == 4'h1;
+  
   always @(posedge clock) begin
     if (reset)
       state <= 4'h0;
@@ -37,8 +38,8 @@ module UARTTransmitter(
       else
           data <= {1'h0, data[7:1]};
     end
-
   end // always @(posedge)
+
   assign io_ready = tick & _io_ready_T;
   assign tx = (|(state[3:2])) ? data[0] : ~_io_ready_T;
 endmodule

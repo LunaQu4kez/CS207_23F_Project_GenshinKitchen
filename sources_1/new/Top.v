@@ -4,8 +4,8 @@ module Top(
     input [4:0] button,
     input [7:0] switches,
 
-    output [7:0] led,
-    output [7:0] led2,
+    output reg [7:0] led,
+    output reg [7:0] led2,
     
     input clk,
     input rx,
@@ -14,10 +14,9 @@ module Top(
 
     wire uart_clk_16;
         
-    reg [7:0] dataIn_bits;
+    reg [7:0] dataIn_bits = 8'b0000_0000;
     wire dataIn_ready;
-    reg state_flag = 1'b0; // 0 not start, 1 start
-    
+
     wire [7:0] dataOut_bits;
     wire dataOut_valid;
     
@@ -25,6 +24,16 @@ module Top(
     wire [7:0] pc;
     wire [15:0] script;
 
+    Clock clock(
+        .clk(clk),
+        .uart_clk_16(uart_clk_16)
+    );
+
+    Manual mnl(
+        .button(button),
+        .switches(switches),
+        .dataIn_bits(dataIn_bits)
+    );
 
     ScriptMem script_mem_module(
         .clock(uart_clk_16),   // please use the same clock as UART module
@@ -53,29 +62,6 @@ module Top(
         .io_dataOut_bits(dataOut_bits),     // (b) byte from GenshinKitchen => DevelopmentBoard, only available if io_dataOut_valid=1
         .io_dataOut_valid(dataOut_valid)  // referring (b)
     );
-
-    Clock clock(
-        .clk(clk),
-        .uart_clk_16(uart_clk_16)
-    );
-
-    always @(posedge uart_clk_16) begin
-        if (dataIn_ready) begin
-            if (switches[7] & ~state_flag) begin
-                state_flag <= 1'b1;
-                dataIn_bits <= 8'b0000_0101;
-            end
-            else if (~switches[7] & state_flag) begin
-                state_flag <= 1'b0;
-                dataIn_bits <= 8'b0000_1001;
-            end
-        end
-        else begin
-            dataIn_bits <= 8'b0000_0000;
-        end
-    end
-
-
 
 
 endmodule
