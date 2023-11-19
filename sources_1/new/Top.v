@@ -14,17 +14,21 @@ module Top(
 
     wire uart_clk_16;
         
-    reg [7:0] dataIn_bits = 8'b0000_0000;
+    wire [7:0] dataIn_bits;
+    wire [7:0] dataIn_bits_manual = 8'b0000_0000;
+    wire [7:0] dataIn_bits_auto = 8'b0000_0000;
     wire dataIn_ready;
 
     wire [7:0] dataOut_bits;
     wire dataOut_valid;
     
     wire script_mode;
-    wire [7:0] pc;
+    wire [7:0] pc = 8'b0000_0000;
     wire [15:0] script;
 
-    Clock clock(
+    assign dataIn_bits = switches[6] ? dataIn_bits_auto : dataIn_bits_manual;
+
+    UARTClock uart_clock(
         .clk(clk),
         .uart_clk_16(uart_clk_16)
     );
@@ -32,7 +36,18 @@ module Top(
     Manual mnl(
         .button(button),
         .switches(switches),
-        .dataIn_bits(dataIn_bits)
+        .dataIn_bits(dataIn_bits_manual)
+    );
+
+    Automatic aut(
+        .clk(uart_clk_16),
+        .out_bits(dataOut_bits),
+        .out_valid(dataOut_valid),
+        .in_ready(dataIn_ready),
+        .mode(script_mode),
+        .script(script),
+        .pc(pc),
+        .in_bits(dataIn_bits_auto)
     );
 
     ScriptMem script_mem_module(

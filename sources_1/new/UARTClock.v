@@ -1,4 +1,4 @@
-module Clock (
+module UARTClock (
     input [0:0] clk,
     output reg [0:0] uart_clk_16
 );
