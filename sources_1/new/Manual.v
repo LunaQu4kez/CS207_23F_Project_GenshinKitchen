@@ -1,7 +1,10 @@
 module Manual (
     input [4:0] button,
     input [7:0] switches,
-    output reg [7:0] dataIn_bits
+    input [7:0] out_bits,
+    output reg [7:0] dataIn_bits,
+    output [7:0] led,
+    output [7:0] led2
 );
 
     always @(switches[7]) begin

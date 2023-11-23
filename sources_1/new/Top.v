@@ -4,8 +4,8 @@ module Top(
     input [4:0] button,
     input [7:0] switches,
 
-    output reg [7:0] led,
-    output reg [7:0] led2,
+    output [7:0] led,
+    output [7:0] led2,
     
     input clk,
     input rx,
@@ -13,41 +13,74 @@ module Top(
 );
 
     wire uart_clk_16;
+    wire quick_clk;
+    wire slow_clk;
         
     wire [7:0] dataIn_bits;
-    wire [7:0] dataIn_bits_manual = 8'b0000_0000;
-    wire [7:0] dataIn_bits_auto = 8'b0000_0000;
+    wire [7:0] dataIn_bits_manual;
+    wire [7:0] dataIn_bits_auto;
     wire dataIn_ready;
 
     wire [7:0] dataOut_bits;
+    reg [7:0] out_bits;
     wire dataOut_valid;
     
     wire script_mode;
-    wire [7:0] pc = 8'b0000_0000;
+    wire [7:0] pc;
     wire [15:0] script;
 
+    wire [7:0] led_manual;
+    wire [7:0] led2_manual;
+    wire [7:0] led_auto;
+    wire [7:0] led2_auto;
+
+    wire rst;
+
     assign dataIn_bits = switches[6] ? dataIn_bits_auto : dataIn_bits_manual;
+    assign led = switches[6] ? led_auto : led_manual;
+    assign led2 = switches[6] ? led2_auto : led2_manual;
+
+    always @(posedge quick_clk) begin
+        if (dataOut_valid) begin
+            out_bits <= dataOut_bits;
+        end
+    end
 
     UARTClock uart_clock(
         .clk(clk),
         .uart_clk_16(uart_clk_16)
     );
 
+    QuickClock quick_clock(
+        .clk(clk),
+        .quick_clk(quick_clk)
+    );
+
+    SlowClock slow_clock(
+        .clk(uart_clk_16),
+        .slow_clk(slow_clk)
+    );
+
     Manual mnl(
         .button(button),
         .switches(switches),
-        .dataIn_bits(dataIn_bits_manual)
+        .out_bits(out_bits),
+        .dataIn_bits(dataIn_bits_manual),
+        .led(led_manual),
+        .led2(led2_manual)
     );
 
     Automatic aut(
-        .clk(uart_clk_16),
-        .out_bits(dataOut_bits),
-        .out_valid(dataOut_valid),
-        .in_ready(dataIn_ready),
-        .mode(script_mode),
+        .clk(slow_clk),
+        .out_bits(out_bits),
         .script(script),
+        .btn(button),
+        .switch(switches[5]),
         .pc(pc),
-        .in_bits(dataIn_bits_auto)
+        .in_bits(dataIn_bits_auto),
+        .led(led_auto),
+        .led2(led2_auto),
+        .rst(rst)
     );
 
     ScriptMem script_mem_module(
