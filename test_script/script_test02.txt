@@ -1,0 +1,15 @@
+game start
+
+get 1
+throw 9
+
+get 9
+put 7
+interact 7
+waituntil target_ready
+
+get 5
+wait 40
+put 9
+
+game end
