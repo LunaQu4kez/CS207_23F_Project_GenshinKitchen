@@ -64,10 +64,11 @@ module Top(
     );
 
     Manual mnl(
+        .clk(slow_clk),
         .button(button),
         .switches(switches),
         .out_bits(out_bits),
-        .dataIn_bits(dataIn_bits_manual),
+        .in_bits(dataIn_bits_manual),
         .led(led_manual),
         .led2(led2_manual)
     );
