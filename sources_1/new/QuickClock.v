@@ -1,3 +1,4 @@
+// A quick enough clock
 module QuickClock (
     input [0:0] clk,
     output reg [0:0] quick_clk

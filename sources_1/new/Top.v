@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module Top(
+module Top(  // top module
     input [4:0] button,
     input [7:0] switches,
 
@@ -12,41 +12,31 @@ module Top(
     output tx
 );
 
-    wire uart_clk_16;
-    wire quick_clk;
-    wire slow_clk;
+    wire uart_clk_16; // 153600Hz
+    wire quick_clk;   // fast enough
+    wire slow_clk;    // 10Hz
         
-    wire [7:0] dataIn_bits;
-    wire [7:0] dataIn_bits_manual;
-    wire [7:0] dataIn_bits_auto;
+    wire [7:0] dataIn_bits;         // data_in to UART
+    wire [7:0] dataIn_bits_manual;  // data_in of manual mode
+    wire [7:0] dataIn_bits_auto;    // data_in of auto mode
     wire dataIn_ready;
 
-    wire [7:0] dataOut_bits;
-    reg [7:0] out_bits;
+    wire [7:0] dataOut_bits;  // receive from UART
+    wire [7:0] out_bits;      // out_bits every valid time
     wire dataOut_valid;
     
     wire script_mode;
     wire [7:0] pc;
     wire [15:0] script;
 
-    wire [7:0] led_manual;
-    wire [7:0] led2_manual;
-    wire [7:0] led_auto;
-    wire [7:0] led2_auto;
+    wire rst;       // reset signal
+    wire rst_auto;  // reset signal in auto mode
 
-    wire rst;
-    wire rst_auto;
+    wire [3:0] state_manual;  // state in manual mode
+    wire [7:0] state_auto;    // state in auto mode
 
     assign dataIn_bits = switches[6] ? dataIn_bits_auto : dataIn_bits_manual;
     assign rst = switches[6] ? rst_auto : 0;
-    assign led = switches[6] ? led_auto : led_manual;
-    assign led2 = switches[6] ? led2_auto : led2_manual;
-
-    always @(posedge quick_clk) begin
-        if (dataOut_valid) begin
-            out_bits <= dataOut_bits;
-        end
-    end
 
     UARTClock uart_clock(
         .clk(clk),
@@ -63,14 +53,33 @@ module Top(
         .slow_clk(slow_clk)
     );
 
+    OutbitsHandle obh(
+        .clk(quick_clk),
+        .dataOut_bits(dataOut_bits),
+        .dataOut_valid(dataOut_valid),
+        .out_bits(out_bits)
+    );
+
+    Output op(
+        .clk(quick_clk),
+        .mode(switches[6]),
+        .out_bits(out_bits),
+        .in_bits_manual(dataIn_bits_manual),
+        .state_manual(state_manual),
+        .state_auto(state_auto),
+        .pc(pc),
+        .script(script),
+        .led(led),
+        .led2(led2)
+    );
+
     Manual mnl(
         .clk(slow_clk),
         .button(button),
         .switches(switches),
         .out_bits(out_bits),
         .in_bits(dataIn_bits_manual),
-        .led(led_manual),
-        .led2(led2_manual)
+        .state_manual(state_manual)
     );
 
     Automatic aut(
@@ -81,9 +90,8 @@ module Top(
         .switch(switches),
         .pc(pc),
         .in_bits(dataIn_bits_auto),
-        .led(led_auto),
-        .led2(led2_auto),
-        .rst(rst_auto)
+        .rst(rst_auto),
+        .state_auto(state_auto)
     );
 
     ScriptMem script_mem_module(

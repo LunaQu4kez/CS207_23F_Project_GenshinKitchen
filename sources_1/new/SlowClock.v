@@ -1,3 +1,4 @@
+// A 10Hz clock
 module SlowClock (
     input [0:0] clk, // 153600Hz
     output reg [0:0] slow_clk // 10Hz
