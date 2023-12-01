@@ -1,5 +1,5 @@
 // Constant
-// Auto State
+// auto state
 `define BG 8'hA0
 `define CHOOSE 8'hA1
 `define START 8'hA2
@@ -27,7 +27,7 @@
 `define TAR_NUM 8'hE7
 `define TAR_BIN 8'hE8
 
-// Manual State
+// manual state
 `define UNSTART_M 4'b0000
 `define USUAL_M 4'b0001
 `define MOVE_M 4'b0010
@@ -38,6 +38,12 @@
 `define START_M 4'b0111
 `define WAIT_M 4'b1000
 `define NONINT_M 4'b1001
+
+// output state
+`define S0 2'b00
+`define S1 2'b01
+`define S2 2'b10
+`define S3 2'b11
 
 // action command
 `define nonact 8'b0000_0000
@@ -73,3 +79,16 @@
 `define n18 6'b010010
 `define n19 6'b010011
 `define n20 6'b010100
+
+// 7seg_tub constant
+`define sel_m 8'b1000_0000
+`define ctr1_m 8'b0110_1110
+`define ctr2_m 8'b0000_0000
+`define sel_a0 8'b1000_1000
+`define sel_a1 8'b0100_0100
+`define sel_a2 8'b0010_0010
+`define sel_a3 8'b0001_0001
+`define ctr00 8'b0010_1000
+`define ctr01 8'b0110_1000
+`define ctr10 8'b0010_1100
+`define ctr11 8'b0110_1100

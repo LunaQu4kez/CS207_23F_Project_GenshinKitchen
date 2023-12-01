@@ -1,21 +1,46 @@
 # CS207_23F_Project_GenshinKitchen
 CS207 数字逻辑2023秋季 Project Genshin Kitchen
 
+客户端及文档：https://github.com/Yan-ice/GenshinKitchen_2023F
+
 ## 小组成员分工
 
-| 成员                                   | 分工               |
-| -------------------------------------- | ------------------ |
-| @[wLUOw](https://github.com/wLUOw)     | 脚本模式及异常处理 |
-| @[Yao1OoO](https://github.com/Yao1OoO) | 手动模式、算法设计 |
-| @[mmhct](https://github.com/mmhct)     | 报告攥写、项目测试 |
+| 成员                                   | 分工                         |
+| -------------------------------------- | ---------------------------- |
+| @[wLUOw](https://github.com/wLUOw)     | 脚本模式及异常处理、项目架构 |
+| @[Yao1OoO](https://github.com/Yao1OoO) | 手动模式、算法设计           |
+| @[mmhct](https://github.com/mmhct)     | 报告攥写、项目测试           |
+
+
 
 ## 项目结构
 
 ```
-
+CS307_23F_Project_GenshinKitchen
+│
+├── constrs_1/new
+│   └── cons.xdc
+├── doc                # project document and report
+├── pic                # picture related to project
+├── sim_1/new          # simulation source
+│   └── *.v
+├── source_1
+│   ├── ip/inst_ram    # RAM
+│   └── new
+│       └── *.v        # main source(our code)
+├── test_script
+│   └── *.txt
+├── LICENSE
+└── README.md
 ```
 
+
+
 ## EGO1说明
+
+![1](pic\manual_mode_descrip.png)
+
+![2](D:\Desktop\Digital Design\Project\GenshinKitchen_2023F\GenshinKitchen\GenshinKitchen.srcs\pic\script_mode_descript.png)
 
 
 

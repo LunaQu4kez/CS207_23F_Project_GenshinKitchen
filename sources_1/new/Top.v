@@ -6,6 +6,10 @@ module Top(  // top module
 
     output [7:0] led,
     output [7:0] led2,
+
+    // 7seg_tub
+    output [7:0] tub_sel,
+    output [7:0] tub_ctr1, tub_ctr2,
     
     input clk,
     input rx,
@@ -15,7 +19,8 @@ module Top(  // top module
     wire uart_clk_16; // 153600Hz
     wire quick_clk;   // fast enough
     wire slow_clk;    // 10Hz
-        
+    wire tub_clk;     // 400Hz
+
     wire [7:0] dataIn_bits;         // data_in to UART
     wire [7:0] dataIn_bits_manual;  // data_in of manual mode
     wire [7:0] dataIn_bits_auto;    // data_in of auto mode
@@ -53,6 +58,11 @@ module Top(  // top module
         .slow_clk(slow_clk)
     );
 
+    SegTubClock tub_clock(
+        .clk(uart_clk_16),
+        .tub_clk(tub_clk)
+    );
+
     OutbitsHandle obh(
         .clk(quick_clk),
         .dataOut_bits(dataOut_bits),
@@ -61,7 +71,7 @@ module Top(  // top module
     );
 
     Output op(
-        .clk(quick_clk),
+        .clk(tub_clk),
         .mode(switches[6]),
         .out_bits(out_bits),
         .in_bits_manual(dataIn_bits_manual),
@@ -70,7 +80,10 @@ module Top(  // top module
         .pc(pc),
         .script(script),
         .led(led),
-        .led2(led2)
+        .led2(led2),
+        .tub_sel(tub_sel),
+        .tub_ctr1(tub_ctr1),
+        .tub_ctr2(tub_ctr2)
     );
 
     Manual mnl(
