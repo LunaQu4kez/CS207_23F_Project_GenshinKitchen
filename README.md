@@ -38,9 +38,9 @@ CS307_23F_Project_GenshinKitchen
 
 ## EGO1说明
 
-![1](pic\manual_mode_descrip.png)
+![1](pic/manual_mode_descrip.png)
 
-![2](D:\Desktop\Digital Design\Project\GenshinKitchen_2023F\GenshinKitchen\GenshinKitchen.srcs\pic\script_mode_descript.png)
+![2](pic/script_mode_descript.png)
 
 
 
