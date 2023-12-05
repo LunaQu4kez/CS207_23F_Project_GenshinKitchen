@@ -42,6 +42,16 @@ CS307_23F_Project_GenshinKitchen
 
 ![2](pic/script_mode_descript.png)
 
+**效果图（未连接VGA外设）**
+
+![3](pic/pic01.png)
+
+**效果图（接入VGA外设）**
+
+外接显示屏的上面一行的16位二进制码代表 script，下面一行左边8位和右边8位二进制码分别代表 UART 向客户端传输和接受的数据。
+
+![4](pic/pic02.png)
+
 
 
 ## 完成任务列表
@@ -90,5 +100,5 @@ CS307_23F_Project_GenshinKitchen
 
 - [x] 错误脚本状态自动处理
 - [x] 用最短的时间在普通厨房中做出"香嫩椒椒鸡、树莓水馒头、冷肉拼盘"
-- [ ] 接入更丰富的外设
+- [x] 接入更丰富的外设
 
