@@ -92,3 +92,16 @@
 `define ctr01 8'b0110_1000
 `define ctr10 8'b0010_1100
 `define ctr11 8'b0110_1100
+
+// VGA constant
+`define H_SYNC_PULSE 10'd96
+`define H_BACK_PORCH 10'd48
+`define H_ACTIVE_TIME 10'd640
+`define H_FRONT_PORCH 10'd16
+`define H_LINE_PERIOD 10'd800
+`define V_SYNC_PULSE 10'd2
+`define V_BACK_PORCH 10'd33
+`define V_ACTIVE_TIME 10'd480
+`define V_FRONT_PORCH 10'd10
+`define V_FRAME_PERIOD 10'd525
+`define char_width 6'd30

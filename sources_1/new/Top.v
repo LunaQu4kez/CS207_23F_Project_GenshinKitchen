@@ -10,6 +10,13 @@ module Top(  // top module
     // 7seg_tub
     output [7:0] tub_sel,
     output [7:0] tub_ctr1, tub_ctr2,
+
+    // vga related
+    output hsync,
+    output vsync,
+    output [3:0] red,
+    output [3:0] green,
+    output [3:0] blue,
     
     input clk,
     input rx,
@@ -105,6 +112,19 @@ module Top(  // top module
         .in_bits(dataIn_bits_auto),
         .rst(rst_auto),
         .state_auto(state_auto)
+    );
+
+    VGA vga_inst(
+        .clk(clk),
+        .rst_n(1),
+        .script(script),
+        .in_bits(dataIn_bits),
+        .out_bits(out_bits),
+        .hsync(hsync),
+        .vsync(vsync),
+        .red(red),
+        .green(green),
+        .blue(blue)
     );
 
     ScriptMem script_mem_module(
