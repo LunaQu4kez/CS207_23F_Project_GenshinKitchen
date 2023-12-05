@@ -5,11 +5,11 @@ CS207 数字逻辑2023秋季 Project Genshin Kitchen
 
 ## 小组成员分工
 
-| 成员                                   | 分工                         |
-| -------------------------------------- | ---------------------------- |
-| @[wLUOw](https://github.com/wLUOw)     | 脚本模式及异常处理、项目架构 |
-| @[Yao1OoO](https://github.com/Yao1OoO) | 手动模式、算法设计           |
-| @[mmhct](https://github.com/mmhct)     | 报告攥写、项目测试           |
+| 成员                                   | 分工                              |
+| -------------------------------------- | --------------------------------- |
+| @[wLUOw](https://github.com/wLUOw)     | 脚本模式及异常处理、项目架构、VGA |
+| @[Yao1OoO](https://github.com/Yao1OoO) | 手动模式、算法设计                |
+| @[mmhct](https://github.com/mmhct)     | 报告攥写、项目测试                |
 
 
 
