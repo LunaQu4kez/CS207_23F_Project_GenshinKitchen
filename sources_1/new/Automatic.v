@@ -22,7 +22,7 @@ module Automatic (
     assign rst = btn[4];
 
     // block determined next state
-    always @(state, btn, switch, temp, script, out_bits, cnt) begin
+    always @(state, btn, switch, temp, script, out_bits, cnt, tar_num) begin
         if (~switch[6]) next_state = state;
         else begin
             case (state)
@@ -90,7 +90,7 @@ module Automatic (
                 `NUM_PLUS:
                     next_state = `WAIT4;
                 `WAIT4:
-                    next_state = tar_num > 20 ? `GET_SCRIPT : `TAR2NUM;
+                    next_state = tar_num > 19 ? `GET_SCRIPT : `TAR2NUM;
             endcase
         end
     end
@@ -108,116 +108,119 @@ module Automatic (
 
     // output logic
     always @(posedge clk) begin
-        case (state)
-            `BG: begin
-                in_bits <= `nonact;
-                tick1 <= 0;
-                tick2 <= 0;
-                tick3 <= 0;
-            end
-            `GET_SCRIPT: begin
-                in_bits <= `nonact;
-                tick1 <= 1;
-                tick2 <= 0;
-            end
-            `CHOOSE: begin
-                in_bits <= `nonact;
-                tick1 <= 0;
-            end
-            `START: begin
-                in_bits <= `start;
-                tick1 <= 0;
-            end
-            `WAIT1: begin
-                in_bits <= `start;
-                tick1 <= 0;
-            end
-            `ENDGAME: begin
-                in_bits <= `endgame;
-                tick1 <= 0;
-            end
-            `TAR_ON: begin
-                in_bits <= {script[13:8], 2'b11};
-                tick1 <= 0;
-            end
-            `MOVE: begin
-                in_bits <= `move;
-                tick1 <= 0;
-            end
-            `THROW: begin
-                in_bits <= `throw;
-                tick1 <= 0;
-            end
-            `PUT: begin
-                in_bits <= `put;
-                tick1 <= 0;
-            end
-            `GET: begin
-                in_bits <= `get;
-                tick1 <= 0;
-            end
-            `INTERACT: begin
-                in_bits <= `interact;
-                tick1 <= 0;
-            end
-            `P_READY: begin
-                in_bits <= `interact;
-                tick1 <= 0;
-            end
-            `T_READY: begin
-                in_bits <= `interact;
-                tick1 <= 0;
-            end
-            `WAIT_CNT: begin
-                in_bits <= `nonact;
-                tick1 <= 0;
-                tick2 <= 1;
-            end
-            `TAR2NUM: begin
-                in_bits <= {tar_num, 2'b11};
-                tick3 <= 0;
-            end
-            `WAIT3: begin
-                in_bits <= {tar_num, 2'b11};
-                tick3 <= 0;
-            end
-            `MOVE2NUM: begin
-                in_bits <= `move;
-                tick3 <= 0;
-            end
-            `GET_ITEM: begin
-                in_bits <= `get;
-                tick3 <= 0;
-            end
-            `TAR2BIN: begin
-                in_bits <= `tarbin;
-                tick3 <= 0;
-            end
-            `THROW_ITEM: begin
-                in_bits <= `throw;
-                tick3 <= 0;
-            end
-            `WAIT2: begin
-                in_bits <= `throw;
-                tick3 <= 0;
-            end
-            `TAR_NUM: begin
-                in_bits <= {tar_num, 2'b11};
-                tick3 <= 0;
-            end
-            `TAR_BIN: begin
-                in_bits <= `tarbin;
-                tick3 <= 0;
-            end
-            `NUM_PLUS: begin
-                in_bits <= `nonact;
-                tick3 <= 1;
-            end
-            `WAIT4: begin
-                in_bits <= `nonact;
-                tick3 <= 0;
-            end
-        endcase
+        if (rst) in_bits <= `nonint;
+        else begin
+            case (state)
+                `BG: begin
+                    in_bits <= `nonact;
+                    tick1 <= 0;
+                    tick2 <= 0;
+                    tick3 <= 0;
+                end
+                `GET_SCRIPT: begin
+                    in_bits <= `nonact;
+                    tick1 <= 1;
+                    tick2 <= 0;
+                end
+                `CHOOSE: begin
+                    in_bits <= `nonact;
+                    tick1 <= 0;
+                end
+                `START: begin
+                    in_bits <= `start;
+                    tick1 <= 0;
+                end
+                `WAIT1: begin
+                    in_bits <= `start;
+                    tick1 <= 0;
+                end
+                `ENDGAME: begin
+                    in_bits <= `endgame;
+                    tick1 <= 0;
+                end
+                `TAR_ON: begin
+                    in_bits <= {script[13:8], 2'b11};
+                    tick1 <= 0;
+                end
+                `MOVE: begin
+                    in_bits <= `move;
+                    tick1 <= 0;
+                end
+                `THROW: begin
+                    in_bits <= `throw;
+                    tick1 <= 0;
+                end
+                `PUT: begin
+                    in_bits <= `put;
+                    tick1 <= 0;
+                end
+                `GET: begin
+                    in_bits <= `get;
+                    tick1 <= 0;
+                end
+                `INTERACT: begin
+                    in_bits <= `interact;
+                    tick1 <= 0;
+                end
+                `P_READY: begin
+                    in_bits <= `interact;
+                    tick1 <= 0;
+                end
+                `T_READY: begin
+                    in_bits <= `interact;
+                    tick1 <= 0;
+                end
+                `WAIT_CNT: begin
+                    in_bits <= `nonact;
+                    tick1 <= 0;
+                    tick2 <= 1;
+                end
+                `TAR2NUM: begin
+                    in_bits <= {tar_num, 2'b11};
+                    tick3 <= 0;
+                end
+                `WAIT3: begin
+                    in_bits <= {tar_num, 2'b11};
+                    tick3 <= 0;
+                end
+                `MOVE2NUM: begin
+                    in_bits <= `move;
+                    tick3 <= 0;
+                end
+                `GET_ITEM: begin
+                    in_bits <= `get;
+                    tick3 <= 0;
+                end
+                `TAR2BIN: begin
+                    in_bits <= `tarbin;
+                    tick3 <= 0;
+                end
+                `THROW_ITEM: begin
+                    in_bits <= `throw;
+                    tick3 <= 0;
+                end
+                `WAIT2: begin
+                    in_bits <= `throw;
+                    tick3 <= 0;
+                end
+                `TAR_NUM: begin
+                    in_bits <= {tar_num, 2'b11};
+                    tick3 <= 0;
+                end
+                `TAR_BIN: begin
+                    in_bits <= `tarbin;
+                    tick3 <= 0;
+                end
+                `NUM_PLUS: begin
+                    in_bits <= `nonact;
+                    tick3 <= 1;
+                end
+                `WAIT4: begin
+                    in_bits <= `nonact;
+                    tick3 <= 0;
+                end
+            endcase
+        end
     end
 
     always @(posedge tick1 or posedge rst) begin
