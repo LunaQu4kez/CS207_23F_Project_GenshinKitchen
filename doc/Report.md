@@ -154,7 +154,9 @@
 ### 高效的脚本设计
 
 ### 接入更丰富的外设
-![picture](/pic/script_mode_descript.png "script_mode_descript")
+![picture](/pic/VGA_pic.jpg "vga")
+
+如图所示，
 
 
 
