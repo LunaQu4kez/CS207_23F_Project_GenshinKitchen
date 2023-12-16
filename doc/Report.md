@@ -149,6 +149,12 @@
 该模块用于生成VGA信号。
 
 ## Bonus实现说明
+### 错误脚本状态自动处理
+
+### 高效的脚本设计
+
+### 接入更丰富的外设
+![picture](/pic/script_mode_descript.png "script_mode_descript")
 
 
 
