@@ -50,17 +50,17 @@
 本部分将说明所有新增模块的功能和输入输出规格，demo中已给出的模块不作说明，出现多次的
 输入输出仅作一次说明
 ### Automatic
-``module Automatic (  
-    input [0:0] clk,
-    input [7:0] out_bits,//输出信号
-    input [15:0] script,//脚本信号
-    input [4:0] btn,//按钮绑定
-    input [7:0] switch,//开关绑定
-    output reg [7:0] pc,//左边八位LED灯，显示脚本储存地址
-    output reg [7:0] in_bits,//八段数码显示管，显示16个0-1信号
-    output [0:0] rst,//复位信号输出
-    output [7:0] state_auto//自动模式状态输出
-);``
+    module Automatic (  
+        input [0:0] clk,
+        input [7:0] out_bits,//输出信号
+        input [15:0] script,//脚本信号
+        input [4:0] btn,//按钮绑定
+        input [7:0] switch,//开关绑定
+        output reg [7:0] pc,//左边八位LED灯，显示脚本储存地址
+        output reg [7:0] in_bits,//八段数码显示管，显示16个0-1信号
+        output [0:0] rst,//复位信号输出
+        output [7:0] state_auto//自动模式状态输出
+    );
 该模块实现了自动模式（脚本模式）下的一个有限状态自动机。将对应开关调整到自动模式后，该模块将被启用。按下开始按钮后，有限状态自动机启动，并将读取到的脚本信号接收，设置相对应的next_state，进入choose阶段，根据脚本信号分别执行指向并交互，等待等操作，如此往复，直到接收到endgame指令，游戏结束。
 此外，如果初始厨房为随机厨房，在执行输入脚本前，会先执行一系列预设的清空脚本，该脚本主要实现遍历所有操作台，如果发现某操作台存在物品，则指向并移动至对应操作台，并将操作台的物品弃置垃圾箱，并设置检查指令确保垃圾箱为空后再执行后续的遍历，直到所有物品清除完成，再开始执行输入的脚本内容。
 
@@ -68,84 +68,84 @@
 该模块定义了一系列之后所需要用到的参数，此处省略说明
 
 ### Manual
-``module Manual (  
-    input [0:0] clk,
-    input [4:0] button,//操作按钮，分别控制拿取，放下，交互，移动，丢
-    input [7:0] switches,//靠右五个拨码开关控制target指向，靠左两个负责游戏模式和游戏开始
-    input [7:0] out_bits,//由OutbitsHandle模块给入的数据信息
-    output reg [7:0] in_bits,//输出信息给Output模块
-    output [3:0] state_manual//输出信息给Output模块
-);``
+    module Manual (  
+        input [0:0] clk,
+        input [4:0] button,//操作按钮，分别控制拿取，放下，交互，移动，丢
+        input [7:0] switches,//靠右五个拨码开关控制target指向，靠左两个负责游戏模式和游戏开始
+        input [7:0] out_bits,//由OutbitsHandle模块给入的数据信息
+        output reg [7:0] in_bits,//输出信息给Output模块
+        output [3:0] state_manual//输出信息给Output模块
+    );
 该模块负责手动模式。通过控制拨码开关来完成对target的选择，选择的数字大小，由五个拨码开关组成的5位二进制数决定。选定target后，通过按下指定的按钮来完成游戏操作。
 
 ### OutbitsHandle
-``module OutbitsHandle (
-    input [0:0] clk,
-    input [7:0] dataOut_bits,
-    input [0:0] dataOut_valid,
-    output reg [7:0] out_bits
-);``
+    module OutbitsHandle (
+        input [0:0] clk,
+        input [7:0] dataOut_bits,
+        input [0:0] dataOut_valid,
+        output reg [7:0] out_bits
+    );
 该模块负责控制输出流。如果dataOut_valid为0，则说明还未准备好，此时不能读取，如果dataOut_valid为1，说明可以读取，在下一时钟上升沿将会把dataOut_bits的值赋给out_bits
 
 ### Output
-``module Output (
-    input [0:0] clk,
-    input [0:0] mode,  // mode, 0 for manual, 1 for auto
-    input [7:0] out_bits,//由OutbitsHandle给入
-    input [7:0] in_bits_manual,//手动模式下的输入数据
-    input [3:0] state_manual,//手动模式下的状态
-    input [7:0] state_auto,//自动模式下的状态
-    input [7:0] pc,//脚本地址
-    input [15:0] script,//脚本内容
-    output [7:0] led,
-    output [7:0] led2,
-    output reg [7:0] tub_sel,//数码管
-    output reg [7:0] tub_ctr1, tub_ctr2//数码管信息
-);``
+    module Output (
+        input [0:0] clk,
+        input [0:0] mode,  // mode, 0 for manual, 1 for auto
+        input [7:0] out_bits,//由OutbitsHandle给入
+        input [7:0] in_bits_manual,//手动模式下的输入数据
+        input [3:0] state_manual,//手动模式下的状态
+        input [7:0] state_auto,//自动模式下的状态
+        input [7:0] pc,//脚本地址
+        input [15:0] script,//脚本内容
+        output [7:0] led,
+        output [7:0] led2,
+        output reg [7:0] tub_sel,//数码管
+        output reg [7:0] tub_ctr1, tub_ctr2//数码管信息
+    );
 该模块负责处理输出信息的内容。
 
 ### QuickClock
-``module QuickClock (
-    input [0:0] clk,
-    output reg [0:0] quick_clk
-);``
+    module QuickClock (
+        input [0:0] clk,
+        output reg [0:0] quick_clk
+    );
 该模块产生一个快时钟。
 
 ### SegTubClock
-``module SegTubClock (
-    input[0:0] clk, // 153600Hz
-    output reg [0:0] tub_clk // 400Hz
-);``
+    module SegTubClock (
+        input[0:0] clk, // 153600Hz
+        output reg [0:0] tub_clk // 400Hz
+    );
 该模块产生一个400Hz的时钟。
 
 ### SlowClock
-``module SlowClock (
-    input [0:0] clk, // 153600Hz
-    output reg [0:0] slow_clk // 10Hz
-);``
+    module SlowClock (
+        input [0:0] clk, // 153600Hz
+        output reg [0:0] slow_clk // 10Hz
+    );
 该模块产生一个10Hz的时钟。
 
 ### UARTClock
-``module UARTClock (
-    input [0:0] clk,
-    output reg [0:0] uart_clk_16
-);``
+    module UARTClock (
+        input [0:0] clk,
+        output reg [0:0] uart_clk_16
+    );
 该模块生成一个可用于UART的时钟。
 
 ### VGA
-``module VGA (  // 640*480@60Hz
-    input clk,
-    input rst_n,
-    input [15:0] script,
-    input [7:0] in_bits,
-    input [7:0] out_bits,
-    output hsync,   // line synchronization signal
-    output vsync,   // vertical synchronization signal
-    // 3 color output
-    output reg [3:0] red,
-    output reg [3:0] green,
-    output reg [3:0] blue
-);``
+    module VGA (  // 640*480@60Hz
+        input clk,
+        input rst_n,
+        input [15:0] script,
+        input [7:0] in_bits,
+        input [7:0] out_bits,
+        output hsync,   // line synchronization signal
+        output vsync,   // vertical synchronization signal
+        // 3 color output
+        output reg [3:0] red,
+        output reg [3:0] green,
+        output reg [3:0] blue
+    );
 该模块用于生成VGA信号。
 
 ## Bonus实现说明
