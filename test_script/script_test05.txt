@@ -1,0 +1,33 @@
+game start
+
+get 1
+throw 9
+
+get 5
+throw 11
+
+get 2
+throw 8
+interact 8
+
+get 9
+throw 7
+interact 7
+waituntil target_ready
+
+get 7
+throw 11
+get 8
+throw 10
+get 11
+throw 10
+get 11
+throw 10
+
+interact 10
+waituntil target_ready
+
+get 10
+put 18
+
+game end

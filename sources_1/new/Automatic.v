@@ -45,17 +45,28 @@ module Automatic (
                 `ENDGAME:
                     next_state = `ENDGAME;
                 `TAR_ON:
-                    if (script[4:3] == 2'b11) next_state = `THROW;
+                    if (script[4:3] == 2'b11 & 
+                        (script[13:8] == `n09 |
+                         script[13:8] == `n11 |
+                         script[13:8] == `n14 |
+                         script[13:8] == `n17 |
+                         script[13:8] == `n19 |
+                         script[13:8] == `n20)) next_state = `THROW;
                     else next_state = `MOVE;
                 `THROW:
                     next_state = ~out_bits[3] ? `GET_SCRIPT : `THROW;
                 `MOVE:
                     if (out_bits[2]) begin
-                        if (script[4:3] == 2'b01) next_state = `PUT;
-                        else if (script[4:3] == 2'b00) next_state = `GET;
+                        if (script[4:3] == 2'b01 | script[4:3] == 2'b11) next_state = `PUT;
+                        else if (script[4:3] == 2'b00 & out_bits[3] == 0) next_state = `GET;
+                        else if (script[4:3] == 2'b00 & out_bits[3] == 1) next_state = `TAR_TO_BIN;
                         else next_state = `INTERACT;
                     end
                     else next_state = `MOVE;
+                `TAR_TO_BIN:
+                    next_state = `THROW_IT;
+                `THROW_IT:
+                    next_state = `TAR_ON;
                 `PUT:
                     next_state = ~out_bits[3] ? `GET_SCRIPT : `PUT;
                 `GET:
@@ -144,6 +155,14 @@ module Automatic (
                 end
                 `MOVE: begin
                     in_bits <= `move;
+                    tick1 <= 0;
+                end
+                `TAR_TO_BIN: begin
+                    in_bits <= `tarbin;
+                    tick1 <= 0;
+                end
+                `THROW_IT: begin
+                    in_bits <= `throw;
                     tick1 <= 0;
                 end
                 `THROW: begin

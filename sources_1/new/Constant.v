@@ -26,6 +26,8 @@
 `define NUM_PLUS 8'hE6
 `define TAR_NUM 8'hE7
 `define TAR_BIN 8'hE8
+`define TAR_TO_BIN 8'hD1
+`define THROW_IT 8'hD2
 
 // manual state
 `define UNSTART_M 4'b0000

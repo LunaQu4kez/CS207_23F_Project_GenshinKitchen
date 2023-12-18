@@ -1,0 +1,8 @@
+game start
+
+get 5
+get 2
+
+put 9
+
+game end
