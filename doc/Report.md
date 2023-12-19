@@ -46,10 +46,104 @@
 
 ### 手动模式
 ![picture](/pic/manual_mode_descrip.png "manual_mode_descript")
-如图所示，若需要开启自动模式，需要将拨码开关SW6调至低电平。
+如图所示，若需要开启自动模式，需要将拨码开关SW6调至低电平。拨动start开关开始游戏，调整如图所示的五个target开关来选择需要选中的目标，右边的五个按钮则是负责控制游戏的各种操作。除H标识的作用为提醒玩家当前模式外，其余输出指示灯主要用于debug使用，玩家游玩时无需仔细关注。
 
 
 ## 系统结构说明
+系统结构有Top模块给出，Top模块的部分代码描述如下
+
+    module Top(  // top module
+        input [4:0] button,
+        input [7:0] switches,
+
+        output [7:0] led,
+        output [7:0] led2,
+
+        // 7seg_tub
+        output [7:0] tub_sel,
+        output [7:0] tub_ctr1, tub_ctr2,
+
+        // vga related
+        output hsync,
+        output vsync,
+        output [3:0] red,
+        output [3:0] green,
+        output [3:0] blue,
+    
+        input clk,
+        input rx,
+        output tx
+    );
+
+        wire uart_clk_16; // 153600Hz
+        wire quick_clk;   // fast enough
+        wire slow_clk;    // 10Hz
+        wire tub_clk;     // 400Hz
+
+        wire [7:0] dataIn_bits;         // data_in to UART
+        wire [7:0] dataIn_bits_manual;  // data_in of manual mode
+        wire [7:0] dataIn_bits_auto;    // data_in of auto mode
+        wire dataIn_ready;
+
+        wire [7:0] dataOut_bits;  // receive from UART
+        wire [7:0] out_bits;      // out_bits every valid time
+        wire dataOut_valid;
+    
+        wire script_mode;
+        wire [7:0] pc;
+        wire [15:0] script;
+
+        wire rst;       // reset signal
+        wire rst_auto;  // reset signal in auto mode
+
+        wire [3:0] state_manual;  // state in manual mode
+        wire [7:0] state_auto;    // state in auto mode
+
+        assign dataIn_bits = switches[6] ? dataIn_bits_auto : dataIn_bits_manual;
+        assign rst = switches[6] ? rst_auto : 0;
+
+时钟模块:
+
+uart_clk_16: 用于UART模块的时钟信号。
+
+quick_clk: 用于快速操作的时钟信号。
+
+slow_clk: 用于慢速操作的时钟信号。
+
+tub_clk: 用于7段显示的时钟信号。
+
+数据和控制信号:
+
+dataIn_bits: 从开关输入的数据，根据条件选择手动或自动模式的输入。提供给uart和vga，根据开关被assign为manual或auto
+
+dataIn_bits_manual: 手动模式下的数据输入。提供给output和manual模块，output负责显示输出，manual负责内部处理。
+
+dataIn_bits_auto: 自动模式下的数据输入。提供给output和auto模块，output负责显示输出，auto负责内部处理。
+
+dataIn_ready: 数据输入就绪信号。提供给UART。
+
+dataOut_bits: 从UART接收到的数据。提供给OutbitsHandle进一步处理。
+
+out_bits: OutbitsHandle处理后的有效输出数据。提供给output，vga（若使用）进行输出显示；给auto或manual进行内部处理，具体提供方向由拨码开关模式选择决定。
+
+dataOut_valid: 表示接收到有效数据的信号。
+
+script_mode: 脚本模式信号，指示是否正在从UART加载脚本。
+
+pc: 程序计数器，用于指示脚本内的位置。
+
+script: 存储脚本指令的变量。
+
+复位信号:
+
+rst: 通用复位信号。
+
+rst_auto: 自动模式下的复位信号。
+
+模式选择:
+
+switches[6]: 控制手动和自动模式的开关。 
+
 
 
 
@@ -83,7 +177,7 @@
         output reg [7:0] in_bits,//输出信息给Output模块
         output [3:0] state_manual//输出信息给Output模块
     );
-该模块负责手动模式。通过控制拨码开关来完成对target的选择，选择的数字大小，由五个拨码开关组成的5位二进制数决定。选定target后，通过按下指定的按钮来完成游戏操作。
+该模块负责手动模式。通过控制拨码开关来完成对target的选择，选择的数字大小，由五个拨码开关组成的5位二进制数决定。选定target后，通过按下指定的按钮来完成游戏操作。同时，该模块加入了错误检查，对于不正确的操作，列出相应的情况并将这些情况归为不做处理（指不进行玩家给出的错误操作）。同时也考虑了持续交互以及单击交互等多种情况的设计。
 
 ### OutbitsHandle
     module OutbitsHandle (
@@ -109,7 +203,7 @@
         output reg [7:0] tub_sel,//数码管
         output reg [7:0] tub_ctr1, tub_ctr2//数码管信息
     );
-该模块负责处理输出信息的内容。
+该模块负责处理输出信息的内容。其中mode控制了当前是处理自动状态还是手动状态，因此这个模块自动与手动可以共用。该模块构建了一个有限状态自动机，并根据状态和脚本内容决定数码管的输出信息，以显示output的内容。
 
 ### QuickClock
     module QuickClock (
@@ -157,7 +251,7 @@
 
 ## Bonus实现说明
 ### 错误脚本状态自动处理
-
+完成了描述中的要求：手里有东西则先把它丢到垃圾桶；执行投掷指令时，如果目标不可被投掷则改为移动过去放置。
 
 ### 高效的脚本设计
 小组成员根据菜谱设计出了针对指定三道菜的脚本，主要设计思路如下：
@@ -185,6 +279,10 @@
 此外，最想说的一点是，异常处理是一件繁琐且需要耐心和仔细的工作，小组在进行设计时，对于异常情况的处理花费了大量的精力，也认识到想要准确地找到每一个细微的bug是一件无比困难的事情。
 
 ## 对Project的想法和建议
+这个项目的亮点在于需要成功整合多种数字逻辑模块，包括自动模式和手动模式的设计、输出模块的处理、时钟的生成以及外设的接入。在处理手动模式中的异常情况方面也需要大量投入，而高效脚本设计和外设接入等bonus也颇具挑战。
 
+对于未来改进的展望，我认为我们可以考虑进一步对系统功能和系统性能进行更深入的优化。这样不仅有助于提高项目的实用性，也能够在未来的扩展中更具竞争力。
+
+如果要提一个小小的建议那就是：对于project的设计，可以在选择主题上面再多加以考虑，避免每次打开游戏测试的时候被舍友以为是op...
 
 
