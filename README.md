@@ -20,12 +20,12 @@ CS307_23F_Project_GenshinKitchen
 │
 ├── constrs_1/new
 │   └── cons.xdc
-├── doc                # project document and report
+├── docs               # project document and report
 ├── pic                # picture related to project
 ├── sim_1/new          # simulation source
 │   └── *.v
 ├── source_1
-│   ├── ip/inst_ram    # RAM
+│   ├── ip
 │   └── new
 │       └── *.v        # main source(our code)
 ├── test_script
@@ -41,6 +41,8 @@ CS307_23F_Project_GenshinKitchen
 ![1](pic/manual_mode_descrip.png)
 
 ![2](pic/script_mode_descript.png)
+
+![picture](./pic/VGA_description.png "VGA_description")
 
 **效果图（未连接VGA外设）**
 
@@ -60,13 +62,13 @@ CS307_23F_Project_GenshinKitchen
 
 - [x] 团队分工
 - [x] 计划日程安排和实施情况
-- [ ] 系统功能列表
-- [ ] 系统使用说明
-- [ ] 系统结构说明
-- [ ] 子模块功能说明
+- [x] 系统功能列表
+- [x] 系统使用说明
+- [x] 系统结构说明
+- [x] 子模块功能说明
 - [ ] Bonus实现说明
 - [ ] 项目总结
-- [ ] 对Project的想法和建议
+- [x] 对Project的想法和建议
 
 ### 代码规范
 
