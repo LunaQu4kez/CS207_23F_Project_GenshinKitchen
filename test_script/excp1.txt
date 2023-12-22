@@ -1,0 +1,12 @@
+game start
+
+get 1
+throw 10
+get 3
+throw 10
+waituntil target_ready
+
+get 10
+throw 18
+
+game end

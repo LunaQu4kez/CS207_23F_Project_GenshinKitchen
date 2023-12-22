@@ -1,0 +1,16 @@
+game start
+
+get 5
+get 4
+get 1
+put 10
+get 6
+get 1
+get 3
+put 10
+waituntil target_ready
+
+get 10
+put 18
+
+game end
