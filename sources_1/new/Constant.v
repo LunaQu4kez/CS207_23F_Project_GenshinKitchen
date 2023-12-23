@@ -15,6 +15,8 @@
 `define P_READY 8'hAC
 `define T_READY 8'hAD
 `define WAIT1 8'hAE
+`define CMP 8'hB0
+`define JUMP 8'hC0
 `define WAIT2 8'hE9
 `define WAIT3 8'hEA
 `define WAIT4 8'hEB

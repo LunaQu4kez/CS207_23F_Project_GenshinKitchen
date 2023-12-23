@@ -1,0 +1,13 @@
+game start
+
+get 3
+jumpif player_hasitem 6
+get 6
+throw 9
+get 4
+throw 9
+get 5
+
+put 17
+
+game end

@@ -1,0 +1,34 @@
+game start
+
+get 1
+throw 9
+get 5
+throw 11
+
+get 2
+put 8
+interact 8
+get 9
+put 7
+interact 7
+waituntil target_ready
+
+get 7
+throw 11
+get 8
+put 10
+get 11
+put 10
+get 11
+put 10
+interact 10
+waituntil target_ready 
+
+get 10
+jumpif player_hasitem 3
+throw 20
+get 6
+
+put 18
+
+game end
