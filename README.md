@@ -66,8 +66,8 @@ CS307_23F_Project_GenshinKitchen
 - [x] 系统使用说明
 - [x] 系统结构说明
 - [x] 子模块功能说明
-- [ ] Bonus实现说明
-- [ ] 项目总结
+- [x] Bonus实现说明
+- [x] 项目总结
 - [x] 对Project的想法和建议
 
 ### 代码规范
