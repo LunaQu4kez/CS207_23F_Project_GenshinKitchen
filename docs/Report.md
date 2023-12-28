@@ -405,7 +405,7 @@ module VGA (  // 640*480@60Hz
   
   always @(tick) begin
       if (tick)
-          pc <= pc + 2;
+          pc = pc + 2;
   end
   ```
 
