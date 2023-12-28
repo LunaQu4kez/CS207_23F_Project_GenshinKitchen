@@ -403,8 +403,9 @@ module VGA (  // 640*480@60Hz
       endcase
   end
   
-  always @(posedge tick) begin
-      pc <= pc + 2;
+  always @(tick) begin
+      if (tick)
+          pc <= pc + 2;
   end
   ```
 
