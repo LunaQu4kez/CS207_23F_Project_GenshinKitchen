@@ -1,5 +1,5 @@
 # CS207_23F_Project_GenshinKitchen
-CS207 数字逻辑2023秋季 Project Genshin Kitchen
+CS207 数字逻辑2023秋季 Project Genshin Kitchen，最终得分120/100（满分）
 
 客户端及文档：https://github.com/Yan-ice/GenshinKitchen_2023F
 
